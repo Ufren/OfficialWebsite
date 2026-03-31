@@ -1,9 +1,10 @@
 export const AppConfig = {
+  name: "UfrenClaw",
   version: "3.1.5",
   downloads: {
     windows: "https://www.modelscope.cn/datasets/NanoModel/FuzFox-Agent-Software/resolve/master/Ufren-3.1.5-win-x64.exe",
-    mac: "#", // Add link when available
-    linux: "#", // Add link when available
+    mac: "#",
+    linux: "#",
   },
   beian: {
     number: "京公网安备11011402054819号",

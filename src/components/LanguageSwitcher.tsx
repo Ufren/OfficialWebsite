@@ -1,43 +1,76 @@
-import React from 'react';
-import { useStore } from '@nanostores/react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { languageStore, toggleLanguage } from '../store/language';
-import { Languages } from 'lucide-react';
-import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { useStore } from '@nanostores/react';
+import { languageStore, languages, setLanguage, type Language } from '../store/language';
+import { Globe, Check } from 'lucide-react';
 
-interface Props {
-  className?: string;
-}
+export const LanguageSwitcher: React.FC = () => {
+  const currentLang = useStore(languageStore);
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-export const LanguageSwitcher = ({ className }: Props) => {
-  const language = useStore(languageStore);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const currentLanguage = languages.find(l => l.code === currentLang)!;
 
   return (
-    <motion.button
-      onClick={toggleLanguage}
-      className={twMerge(
-        "flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/50 border border-slate-700 text-slate-300 hover:text-white hover:border-cyan-500/50 transition-all group",
-        className
-      )}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <Languages className="w-4 h-4 group-hover:text-cyan-400 transition-colors" />
-      <div className="relative w-12 h-5 overflow-hidden font-medium text-sm">
-        <AnimatePresence mode="wait">
-          <motion.span
-            key={language}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -20, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="absolute inset-0 flex items-center justify-center"
+    <div className="relative" ref={dropdownRef}>
+      <motion.button
+        onClick={() => setIsOpen(!isOpen)}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--color-bg-card)] border border-[var(--color-border)] hover:border-[var(--color-border-hover)] transition-colors"
+      >
+        <Globe className="w-4 h-4 text-[var(--color-text-secondary)]" />
+        <span className="text-sm font-medium text-[var(--color-text-primary)]">
+          {currentLanguage.flag} {currentLanguage.name}
+        </span>
+      </motion.button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className="absolute top-full right-0 mt-2 w-40 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)] shadow-lg overflow-hidden z-50"
           >
-            {language === 'en' ? 'EN / 中' : '中 / EN'}
-          </motion.span>
-        </AnimatePresence>
-      </div>
-    </motion.button>
+            {languages.map((lang) => (
+              <motion.button
+                key={lang.code}
+                onClick={() => {
+                  setLanguage(lang.code);
+                  setIsOpen(false);
+                }}
+                whileHover={{ backgroundColor: 'var(--color-bg-secondary)' }}
+                className={`w-full flex items-center justify-between px-4 py-3 text-left transition-colors ${
+                  currentLang === lang.code ? 'bg-[var(--color-bg-secondary)]' : ''
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  <span className="text-lg">{lang.flag}</span>
+                  <span className="text-sm font-medium text-[var(--color-text-primary)]">
+                    {lang.name}
+                  </span>
+                </span>
+                {currentLang === lang.code && (
+                  <Check className="w-4 h-4 text-[var(--color-text-secondary)]" />
+                )}
+              </motion.button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };

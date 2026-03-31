@@ -1,24 +1,36 @@
 ---
-import '../styles/global.css';
+import { GradientBackground } from '../components/GradientBackground';
+import { CursorGlow } from '../components/Effects';
 
 interface Props {
-	title: string;
+  title: string;
 }
 
 const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content="Ufren AI Desktop - The Ultimate AI Workspace" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/png" href="/logo.png" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
-	</head>
-	<body class="bg-slate-950 text-slate-50 overflow-x-hidden antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
-		<slot />
-	</body>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="UfrenClaw - Modern Desktop AI Assistant built with Electron, React, and OpenClaw" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <title>{title}</title>
+  </head>
+  <body class="bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] antialiased cursor-none">
+    <GradientBackground client:load />
+    <CursorGlow client:load />
+    <slot />
+  </body>
 </html>
+
+<style is:global>
+  @import '../styles/global.css';
+  
+  @media (pointer: coarse) {
+    body {
+      cursor: auto;
+    }
+  }
+</style>
