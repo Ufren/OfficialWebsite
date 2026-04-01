@@ -4,7 +4,7 @@ import { useStore } from '@nanostores/react';
 import { languageStore } from '../store/language';
 import { translations } from '../i18n/translations';
 import { AppConfig } from '../config';
-import { Github, Twitter } from 'lucide-react';
+import { Github } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const language = useStore(languageStore);
@@ -33,7 +33,7 @@ export const Footer: React.FC = () => {
             </p>
             <div className="flex gap-3">
               <motion.a
-                href="https://github.com/ufren-ai/ufren"
+                href="https://github.com/Ufren/UfrenClaw"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
@@ -41,16 +41,6 @@ export const Footer: React.FC = () => {
                 className="w-9 h-9 rounded-full bg-[var(--color-bg-card)] border border-[var(--color-border)] flex items-center justify-center text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-border-hover)] transition-colors"
               >
                 <Github className="w-4 h-4" />
-              </motion.a>
-              <motion.a
-                href="https://twitter.com/ufren_ai"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-9 h-9 rounded-full bg-[var(--color-bg-card)] border border-[var(--color-border)] flex items-center justify-center text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-border-hover)] transition-colors"
-              >
-                <Twitter className="w-4 h-4" />
               </motion.a>
             </div>
           </div>
@@ -114,12 +104,14 @@ export const Footer: React.FC = () => {
           <p className="text-sm text-[var(--color-text-muted)]">
             © {new Date().getFullYear()} {AppConfig.name}. {t.copyright}
           </p>
-          <p className="flex items-center gap-2 text-sm text-[var(--color-text-muted)]">
-            <img src="/beian.png" alt="" className="w-4 h-4 opacity-50 hidden" onError={(e) => e.currentTarget.style.display = 'none'} />
-            <a href={AppConfig.beian.link} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-text-primary)] transition-colors">
-              {AppConfig.beian.number}
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-sm text-[var(--color-text-muted)]">
+            <a href={AppConfig.beian.icp.link} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-text-primary)] transition-colors">
+              {AppConfig.beian.icp.number}
             </a>
-          </p>
+            <a href={AppConfig.beian.police.link} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-text-primary)] transition-colors">
+              {AppConfig.beian.police.number}
+            </a>
+          </div>
         </div>
       </div>
     </footer>

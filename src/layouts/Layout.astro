@@ -1,6 +1,5 @@
 ---
 import { GradientBackground } from '../components/GradientBackground';
-import { CursorGlow } from '../components/Effects';
 
 interface Props {
   title: string;
@@ -18,19 +17,12 @@ const { title } = Astro.props;
     <link rel="icon" type="image/png" href="/logo.png" />
     <title>{title}</title>
   </head>
-  <body class="bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] antialiased cursor-none">
+  <body class="bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] antialiased">
     <GradientBackground client:load />
-    <CursorGlow client:load />
     <slot />
   </body>
 </html>
 
 <style is:global>
   @import '../styles/global.css';
-  
-  @media (pointer: coarse) {
-    body {
-      cursor: auto;
-    }
-  }
 </style>

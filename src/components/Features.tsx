@@ -4,6 +4,7 @@ import { useStore } from '@nanostores/react';
 import { languageStore } from '../store/language';
 import { translations } from '../i18n/translations';
 import { TiltCard } from './Effects';
+import { FadeInText, StaggerContainer, StaggerItem } from './Animations';
 import { Rocket, MessageSquare, Cpu, Brain, Plug, Wrench, Clock, Settings, type LucideIcon } from 'lucide-react';
 
 const iconMap: Record<string, LucideIcon> = {
@@ -24,32 +25,34 @@ export const Features: React.FC = () => {
   return (
     <section id="features" className="section-padding relative">
       <div className="container-custom">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-[var(--color-text-primary)]">
-            {t.title}
-          </h2>
-          <p className="text-lg text-[var(--color-text-secondary)] max-w-2xl mx-auto">
-            {t.subtitle}
-          </p>
-        </motion.div>
+        <FadeInText>
+          <div className="text-center mb-16">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-[var(--color-text-primary)]"
+            >
+              {t.title}
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-lg text-[var(--color-text-secondary)] max-w-2xl mx-auto"
+            >
+              {t.subtitle}
+            </motion.p>
+          </div>
+        </FadeInText>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StaggerContainer staggerDelay={0.1} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {t.items.map((item, index) => {
             const IconComponent = iconMap[item.icon] || Rocket;
             return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
+              <StaggerItem key={index}>
                 <TiltCard
                   tiltMaxAngle={6}
                   glareEnable={true}
@@ -76,12 +79,16 @@ export const Features: React.FC = () => {
                     {item.description}
                   </p>
 
-                  <div className="absolute inset-0 rounded-2xl bg-[var(--color-accent-glow)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                    className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[var(--color-accent)]/5 to-transparent pointer-events-none"
+                  />
                 </TiltCard>
-              </motion.div>
+              </StaggerItem>
             );
           })}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );
