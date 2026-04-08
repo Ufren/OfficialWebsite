@@ -4,8 +4,9 @@ import { useStore } from '@nanostores/react';
 import { languageStore } from '../store/language';
 import { translations } from '../i18n/translations';
 import { AppConfig } from '../config';
-import { MagneticButton, RippleEffect } from './Effects';
+import { MagneticButton, RippleEffect, ShimmerButton } from './Effects';
 import { FadeInText, FloatingElement } from './Animations';
+import { BorderBeam } from './BorderBeam';
 import { Download, ArrowRight, Sparkles } from 'lucide-react';
 
 export const CTA: React.FC = () => {
@@ -22,6 +23,14 @@ export const CTA: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="relative rounded-3xl bg-gradient-to-br from-[var(--color-bg-card)] to-[var(--color-bg-secondary)] border border-[var(--color-border)] p-12 md:p-16 text-center overflow-hidden"
         >
+          <BorderBeam
+            size={250}
+            duration={12}
+            borderWidth={1}
+            colorFrom="var(--color-text-secondary)"
+            colorTo="transparent"
+          />
+
           <div className="absolute inset-0 overflow-hidden">
             <FloatingElement duration={6} distance={30} delay={0} className="absolute -top-10 -left-10">
               <div className="w-40 h-40 rounded-full bg-[var(--color-accent)]/5 blur-3xl" />
@@ -34,7 +43,7 @@ export const CTA: React.FC = () => {
           <div className="relative z-10">
             <FadeInText delay={0}>
               <motion.div
-                animate={{ 
+                animate={{
                   scale: [1, 1.1, 1],
                   rotate: [0, 5, -5, 0]
                 }}
@@ -63,16 +72,21 @@ export const CTA: React.FC = () => {
                   href={AppConfig.downloads.windows}
                   className="relative overflow-hidden"
                 >
-                  <RippleEffect className="flex items-center gap-3 px-8 py-4 rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-primary)] font-semibold text-lg hover:bg-[var(--color-accent-hover)] transition-colors">
+                  <ShimmerButton
+                    className="font-semibold text-lg"
+                    shimmerColor="rgba(255, 255, 255, 0.25)"
+                    shimmerDuration="3s"
+                    background="var(--color-accent)"
+                  >
                     <motion.div
                       animate={{ y: [0, -3, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
                     >
-                      <Download className="w-5 h-5" />
+                      <Download className="w-5 h-5 text-[var(--color-bg-primary)]" />
                     </motion.div>
-                    {t.freeDownload || t.download}
-                    <ArrowRight className="w-5 h-5" />
-                  </RippleEffect>
+                    <span className="text-[var(--color-bg-primary)]">{t.freeDownload || t.download}</span>
+                    <ArrowRight className="w-5 h-5 text-[var(--color-bg-primary)]" />
+                  </ShimmerButton>
                 </MagneticButton>
               </div>
             </FadeInText>

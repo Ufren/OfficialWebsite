@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import { Hero } from '../components/Hero';
 import { Features } from '../components/Features';
+import { InfiniteMarquee } from '../components/InfiniteMarquee';
 import { Screenshots } from '../components/Screenshots';
 import { DeepDive } from '../components/DeepDive';
 import { Testimonials } from '../components/Testimonials';
@@ -14,6 +15,7 @@ import { Footer } from '../components/Footer';
 	<main>
 		<Navbar client:load />
 		<Hero client:load />
+		<InfiniteMarquee client:visible />
 		<Features client:visible />
 		<Screenshots client:visible />
 		<DeepDive client:visible />

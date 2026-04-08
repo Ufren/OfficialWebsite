@@ -4,8 +4,11 @@ import { useStore } from '@nanostores/react';
 import { languageStore } from '../store/language';
 import { translations } from '../i18n/translations';
 import { AppConfig } from '../config';
-import { MagneticButton, RippleEffect } from './Effects';
+import { MagneticButton, RippleEffect, ShimmerButton } from './Effects';
 import { CountUp, FadeInText, FloatingElement, TextReveal } from './Animations';
+import { SpotlightArea } from './Spotlight';
+import { ProductMockup } from './ProductMockup';
+import { MorphingBlob } from './MorphingBlob';
 import { ArrowRight, Download, Github, Sparkles } from 'lucide-react';
 
 const TypewriterText: React.FC<{ text: string; delay?: number; className?: string }> = ({
@@ -111,18 +114,23 @@ export const Hero: React.FC = () => {
           >
             <MagneticButton
               href={AppConfig.downloads.windows}
-              className="group relative overflow-hidden"
+              className="relative overflow-hidden"
             >
-              <RippleEffect className="flex items-center gap-3 px-8 py-4 rounded-xl bg-[var(--color-accent)] text-[var(--color-bg-primary)] font-semibold text-lg hover:bg-[var(--color-accent-hover)] transition-colors">
+              <ShimmerButton
+                className="font-semibold text-lg"
+                shimmerColor="rgba(255, 255, 255, 0.25)"
+                shimmerDuration="3s"
+                background="var(--color-accent)"
+              >
                 <motion.div
                   animate={{ y: [0, -3, 0] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 >
-                  <Download className="w-5 h-5" />
+                  <Download className="w-5 h-5 text-[var(--color-bg-primary)]" />
                 </motion.div>
-                {t.buttons.primary}
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </RippleEffect>
+                <span className="text-[var(--color-bg-primary)]">{t.buttons.primary}</span>
+                <ArrowRight className="w-5 h-5 text-[var(--color-bg-primary)] group-hover:translate-x-1 transition-transform" />
+              </ShimmerButton>
             </MagneticButton>
 
             <MagneticButton
@@ -147,7 +155,7 @@ export const Hero: React.FC = () => {
             transition={{ delay: 0.8, duration: 0.6 }}
             className="mt-16 flex items-center justify-center gap-8 md:gap-16"
           >
-            <motion.div 
+            <motion.div
               className="text-center"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
@@ -157,13 +165,13 @@ export const Hero: React.FC = () => {
               </div>
               <div className="text-sm text-[var(--color-text-muted)]">{t.stats.users}</div>
             </motion.div>
-            <motion.div 
+            <motion.div
               className="w-px h-12 bg-[var(--color-border)]"
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
               transition={{ delay: 1, duration: 0.5 }}
             />
-            <motion.div 
+            <motion.div
               className="text-center"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
@@ -173,13 +181,13 @@ export const Hero: React.FC = () => {
               </div>
               <div className="text-sm text-[var(--color-text-muted)]">{t.stats.rating}</div>
             </motion.div>
-            <motion.div 
+            <motion.div
               className="w-px h-12 bg-[var(--color-border)]"
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
               transition={{ delay: 1.2, duration: 0.5 }}
             />
-            <motion.div 
+            <motion.div
               className="text-center"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
@@ -191,6 +199,16 @@ export const Hero: React.FC = () => {
             </motion.div>
           </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 60, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 1.2, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+          className="mt-16 max-w-3xl mx-auto relative"
+        >
+          <MorphingBlob className="absolute inset-0" />
+          <ProductMockup />
+        </motion.div>
       </div>
 
       <FloatingElement duration={4} distance={15} delay={0} className="absolute top-1/4 left-10 opacity-20">

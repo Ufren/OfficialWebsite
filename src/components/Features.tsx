@@ -4,7 +4,8 @@ import { useStore } from '@nanostores/react';
 import { languageStore } from '../store/language';
 import { translations } from '../i18n/translations';
 import { TiltCard } from './Effects';
-import { FadeInText, StaggerContainer, StaggerItem } from './Animations';
+import { FadeInText, StaggerContainer } from './Animations';
+import { SpotlightCard } from './Spotlight';
 import { Rocket, MessageSquare, Cpu, Brain, Plug, Wrench, Clock, Settings, type LucideIcon } from 'lucide-react';
 
 const iconMap: Record<string, LucideIcon> = {
@@ -48,11 +49,11 @@ export const Features: React.FC = () => {
           </div>
         </FadeInText>
 
-        <StaggerContainer staggerDelay={0.1} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StaggerContainer staggerDelay={0.08} waveMode={true} columns={4} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {t.items.map((item, index) => {
             const IconComponent = iconMap[item.icon] || Rocket;
             return (
-              <StaggerItem key={index}>
+              <SpotlightCard key={index} spotlightColor="rgba(120, 120, 120, 0.06)">
                 <TiltCard
                   tiltMaxAngle={6}
                   glareEnable={true}
@@ -85,7 +86,7 @@ export const Features: React.FC = () => {
                     className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[var(--color-accent)]/5 to-transparent pointer-events-none"
                   />
                 </TiltCard>
-              </StaggerItem>
+              </SpotlightCard>
             );
           })}
         </StaggerContainer>

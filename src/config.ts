@@ -2,7 +2,7 @@ export const AppConfig = {
   name: "UfrenClaw",
   version: "3.1.5",
   downloads: {
-    windows: "https://www.modelscope.cn/datasets/NanoModel/FuzFox-Agent-Software/resolve/master/UfrenClaw-3.1.5-win-x64.exe",
+    windows: "https://www.modelscope.cn/datasets/NanoModel/FuzFox-Agent-Software/resolve/master/UfrenClaw-3.1.6-win-x64.exe",
     mac: "#",
     linux: "#",
   },

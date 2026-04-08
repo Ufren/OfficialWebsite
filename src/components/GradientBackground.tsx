@@ -1,7 +1,24 @@
 import React, { useEffect, useRef } from 'react';
+import { useStore } from '@nanostores/react';
+import { themeStore } from '../store/theme';
+
+interface AuroraOrb {
+  x: number;
+  y: number;
+  radius: number;
+  hue: number;
+  saturation: number;
+  lightness: number;
+  opacity: number;
+  speedX: number;
+  speedY: number;
+  phase: number;
+  pulseSpeed: number;
+}
 
 export const GradientBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const theme = useStore(themeStore);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -18,86 +35,85 @@ export const GradientBackground: React.FC = () => {
       canvas.height = window.innerHeight;
     };
 
-    const drawGradientOrb = (
-      x: number,
-      y: number,
-      radius: number,
-      opacity: number,
-      timeOffset: number
-    ) => {
-      const pulse = Math.sin(time * 0.5 + timeOffset) * 0.3 + 0.7;
-      const currentRadius = radius * pulse;
-      
-      const gradient = ctx.createRadialGradient(x, y, 0, x, y, currentRadius);
-      const isDark = document.documentElement.classList.contains('dark');
-      
-      if (isDark) {
-        gradient.addColorStop(0, `rgba(255, 255, 255, ${opacity * 0.15})`);
-        gradient.addColorStop(0.5, `rgba(200, 200, 200, ${opacity * 0.08})`);
-        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-      } else {
-        gradient.addColorStop(0, `rgba(0, 0, 0, ${opacity * 0.08})`);
-        gradient.addColorStop(0.5, `rgba(50, 50, 50, ${opacity * 0.04})`);
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      }
+    const isDark = () => document.documentElement.classList.contains('dark');
 
-      ctx.beginPath();
-      ctx.arc(x, y, currentRadius, 0, Math.PI * 2);
-      ctx.fillStyle = gradient;
-      ctx.fill();
-    };
+    const orbs: AuroraOrb[] = [
+      {
+        x: 0.2, y: 0.3, radius: 500, hue: 170, saturation: 70, lightness: 50,
+        opacity: 0.12, speedX: 0.3, speedY: 0.4, phase: 0, pulseSpeed: 0.5,
+      },
+      {
+        x: 0.8, y: 0.2, radius: 450, hue: 220, saturation: 60, lightness: 45,
+        opacity: 0.1, speedX: 0.35, speedY: 0.45, phase: 2, pulseSpeed: 0.6,
+      },
+      {
+        x: 0.5, y: 0.7, radius: 550, hue: 280, saturation: 50, lightness: 40,
+        opacity: 0.08, speedX: 0.25, speedY: 0.3, phase: 4, pulseSpeed: 0.4,
+      },
+      {
+        x: 0.15, y: 0.8, radius: 350, hue: 140, saturation: 65, lightness: 45,
+        opacity: 0.07, speedX: 0.4, speedY: 0.35, phase: 1, pulseSpeed: 0.55,
+      },
+      {
+        x: 0.85, y: 0.6, radius: 400, hue: 320, saturation: 55, lightness: 40,
+        opacity: 0.06, speedX: 0.3, speedY: 0.25, phase: 3, pulseSpeed: 0.45,
+      },
+    ];
 
-    const drawMeshGradient = () => {
-      const isDark = document.documentElement.classList.contains('dark');
-      
+    const drawAurora = () => {
+      const dark = isDark();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const baseOpacity = isDark ? 0.6 : 0.4;
+      orbs.forEach((orb) => {
+        const pulse = Math.sin(time * orb.pulseSpeed + orb.phase) * 0.3 + 0.7;
+        const currentRadius = orb.radius * pulse;
 
-      drawGradientOrb(
-        canvas.width * 0.2 + Math.sin(time * 0.3) * 50,
-        canvas.height * 0.3 + Math.cos(time * 0.4) * 30,
-        400,
-        baseOpacity,
-        0
-      );
+        const cx = canvas.width * orb.x + Math.sin(time * orb.speedX + orb.phase) * 80;
+        const cy = canvas.height * orb.y + Math.cos(time * orb.speedY + orb.phase) * 60;
 
-      drawGradientOrb(
-        canvas.width * 0.8 + Math.cos(time * 0.35) * 40,
-        canvas.height * 0.2 + Math.sin(time * 0.45) * 35,
-        350,
-        baseOpacity * 0.8,
-        2
-      );
+        const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, currentRadius);
 
-      drawGradientOrb(
-        canvas.width * 0.5 + Math.sin(time * 0.25) * 60,
-        canvas.height * 0.7 + Math.cos(time * 0.3) * 45,
-        450,
-        baseOpacity * 0.7,
-        4
-      );
+        if (dark) {
+          const h = orb.hue;
+          const s = orb.saturation;
+          const l = orb.lightness;
+          gradient.addColorStop(0, `hsla(${h}, ${s}%, ${l}%, ${orb.opacity * 1.5})`);
+          gradient.addColorStop(0.3, `hsla(${h}, ${s}%, ${l}%, ${orb.opacity * 0.8})`);
+          gradient.addColorStop(0.6, `hsla(${h}, ${s - 10}%, ${l - 5}%, ${orb.opacity * 0.3})`);
+          gradient.addColorStop(1, 'transparent');
+        } else {
+          const h = orb.hue;
+          const s = orb.saturation * 0.5;
+          const l = orb.lightness + 20;
+          gradient.addColorStop(0, `hsla(${h}, ${s}%, ${l}%, ${orb.opacity * 0.8})`);
+          gradient.addColorStop(0.3, `hsla(${h}, ${s}%, ${l}%, ${orb.opacity * 0.4})`);
+          gradient.addColorStop(0.6, `hsla(${h}, ${s - 5}%, ${l}%, ${orb.opacity * 0.15})`);
+          gradient.addColorStop(1, 'transparent');
+        }
 
-      drawGradientOrb(
-        canvas.width * 0.15 + Math.cos(time * 0.4) * 35,
-        canvas.height * 0.8 + Math.sin(time * 0.35) * 40,
-        300,
-        baseOpacity * 0.6,
-        1
-      );
+        ctx.beginPath();
+        ctx.arc(cx, cy, currentRadius, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+      });
 
-      drawGradientOrb(
-        canvas.width * 0.85 + Math.sin(time * 0.3) * 45,
-        canvas.height * 0.6 + Math.cos(time * 0.25) * 50,
-        380,
-        baseOpacity * 0.5,
-        3
-      );
+      if (dark) {
+        const waveY = canvas.height * 0.5 + Math.sin(time * 0.2) * 100;
+        const waveGradient = ctx.createLinearGradient(0, waveY - 200, 0, waveY + 200);
+        waveGradient.addColorStop(0, 'transparent');
+        waveGradient.addColorStop(0.3, 'hsla(200, 60%, 50%, 0.02)');
+        waveGradient.addColorStop(0.5, 'hsla(180, 70%, 45%, 0.04)');
+        waveGradient.addColorStop(0.7, 'hsla(220, 60%, 50%, 0.02)');
+        waveGradient.addColorStop(1, 'transparent');
+
+        ctx.fillStyle = waveGradient;
+        ctx.fillRect(0, waveY - 200, canvas.width, 400);
+      }
     };
 
     const animate = () => {
-      time += 0.01;
-      drawMeshGradient();
+      time += 0.008;
+      drawAurora();
       animationId = requestAnimationFrame(animate);
     };
 
@@ -109,7 +125,7 @@ export const GradientBackground: React.FC = () => {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationId);
     };
-  }, []);
+  }, [theme]);
 
   return (
     <canvas

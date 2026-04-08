@@ -298,3 +298,59 @@ export const RippleEffect: React.FC<RippleEffectProps> = ({
     </div>
   );
 };
+
+interface ShimmerButtonProps {
+  children: React.ReactNode;
+  className?: string;
+  shimmerColor?: string;
+  shimmerSize?: string;
+  borderRadius?: string;
+  shimmerDuration?: string;
+  background?: string;
+}
+
+export const ShimmerButton: React.FC<ShimmerButtonProps> = ({
+  children,
+  className = '',
+  shimmerColor = 'rgba(255, 255, 255, 0.3)',
+  shimmerSize = '0.1em',
+  borderRadius = '0.75rem',
+  shimmerDuration = '3s',
+  background = 'var(--color-accent)',
+}) => {
+  return (
+    <button
+      className={`relative overflow-hidden isolate ${className}`}
+      style={{
+        borderRadius,
+        background,
+        padding: '0',
+        border: 'none',
+      }}
+    >
+      <div
+        className="absolute inset-0 overflow-hidden"
+        style={{ borderRadius }}
+      >
+        <div
+          className="absolute inset-[-100%]"
+          style={{
+            animation: `shimmer-button ${shimmerDuration} linear infinite`,
+            background: `linear-gradient(90deg, transparent 0%, ${shimmerColor} 50%, transparent 100%)`,
+          }}
+        />
+      </div>
+      <div
+        className="relative z-10 flex items-center justify-center gap-2"
+        style={{
+          background,
+          borderRadius,
+          margin: shimmerSize,
+          padding: '0.75rem 1.5rem',
+        }}
+      >
+        {children}
+      </div>
+    </button>
+  );
+};

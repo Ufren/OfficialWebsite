@@ -157,15 +157,46 @@ interface StaggerContainerProps {
   children: React.ReactNode;
   staggerDelay?: number;
   className?: string;
+  waveMode?: boolean;
+  columns?: number;
 }
 
 export const StaggerContainer: React.FC<StaggerContainerProps> = ({
   children,
   staggerDelay = 0.1,
   className = '',
+  waveMode = false,
+  columns = 4,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: '-50px' });
+
+  if (waveMode) {
+    const childArray = React.Children.toArray(children);
+    return (
+      <div ref={ref} className={className}>
+        {isInView && childArray.map((child, index) => {
+          const row = Math.floor(index / columns);
+          const col = index % columns;
+          const waveDelay = (row + col) * staggerDelay;
+          return (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 30, scale: 0.9, filter: 'blur(10px)' }}
+              animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+              transition={{
+                duration: 0.6,
+                delay: waveDelay,
+                ease: [0.25, 0.1, 0.25, 1],
+              }}
+            >
+              {child}
+            </motion.div>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <motion.div
